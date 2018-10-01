@@ -25,11 +25,13 @@
         <div><img src="{{ asset('images/Durrows.png')}}"  alt=""  width="380px" height="120px"/></div>
         SIGN UP FORM
     </div>
+    <form id="validate" enctype="application/x-www-form-urlencoded" role="form" class="profile_form" novalidate="novalidate" method="post" >
+    @csrf
     <div class="form-group">
         <div class="typeform">
         <div>PERSONAL INFORMATION</div>
         <input type="text" name="guest_name" id="guest_name" class="form-control required" placeholder="NAME">
-        <input type="text" name="guest_phone" id="guest_phone" class="form-control required" placeholder="MOBILE">
+        <input type="text" name="guest_phone" id="guest_phone" class="form-control required" placeholder="MOBILE"  onkeypress="return ValidateNumber(event)" >
         <input type="email" name="guest_email" id="guest_email" class="form-control required" placeholder="EMAIL">
         <input type="text" name="guest_company" id="guest_company" class="form-control required" placeholder="COMPANY">
         <input type="text" name="guest_address" id="guest_address" class="form-control required" placeholder="ADDRESS">
@@ -67,8 +69,9 @@
         <div style="height:  20px"></div>
         <div class="g-recaptcha" data-callback="correctCaptcha" data-sitekey="{{ env('GOOGLE_RECAPTCHA_SITEKEY')}}" style="transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;" ></div>
         </div>
-         <div class="submit"> <button name="contactsubmit" id="contactsubmit" type="submit" value="Send message"  class="submit-button">Submit</button></div>
+        <div class="submit"> <button name="contactsubmit" id="contactsubmit" type="submit" value="Send message"  class="submit-button" action="{{ action('frontend\ContactusController@save') }}">Submit</button></div>
     </div>
+    </form>
 </div>
 
 <script src='https://www.google.com/recaptcha/api.js'></script>
