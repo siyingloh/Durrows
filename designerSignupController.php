@@ -30,7 +30,7 @@ class designersignupController extends Controller
     
     public function save(Request $request){
         // dd($request);
-        $template = Templates::where('temp_key', 'like', 'registerform_admin')->first();
+        $template = Templates::where('temp_key', 'like', 'register_form')->first();
         $subject = $template->temp_subject;
         $template = $template->temp_text;
         
@@ -61,7 +61,7 @@ class designersignupController extends Controller
             $message->setBody($data['content'], 'text/html');
         });
        
-       $template = Templates::where('temp_key', 'like', 'registerform_user')->first();
+       $template = Templates::where('temp_key', 'like', 'register_form')->first();
          $subject = $template->temp_subject;
          $template = $template->temp_text;
        

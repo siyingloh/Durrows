@@ -11,7 +11,21 @@
 |
 */
 
+use \DrewM\MailChimp\MailChimp;
+
 Route::get('/', 'frontend\HomeController@index')->name('home');
+Route::post('/', function () {
+
+$list_id = '6b24943d56'; // ListID
+$MC_key = new Mailchimp('62a175812c7c4f5f058bfcea86ea89d8-us19'); //Mailchimp ID
+
+$result = $MC_key->post("lists/$list_id/members", [
+                'email_address' =>  request()->input('email'),
+                'status'        => 'subscribed',
+            ]);
+            //when subscription successful, return to subscribe view
+    return  redirect()->back();
+});
 
 Auth::routes(); 
 Route::prefix('admin')->group(function() {
@@ -21,10 +35,9 @@ Route::prefix('admin')->group(function() {
     Route::get('/logout', 'Auth\AdminLoginController@logout')->name('admin.logout');
  
      Route::get('/', 'HomeController@index')->name('admin.dashboard');
-Route::get('/admin', 'dashboard\AdminController@index');
 Route::post('/admin/save','dashboard\AdminController@saved');
-Route::post('/admin/saved','dashboard\AdminController@save');
-Route::post('/profile-upload','dashboard\AdminController@upload');
+Route::post('/admin/saved','dashbo\AdminController@save');
+Route::post('/profilad','dashboard\AdminController@upload');
 
 Route::get('/Settings', 'dashboard\SettingsController@index');
 Route::post('/Settings/save', 'dashboard\SettingsController@save');
@@ -40,7 +53,6 @@ Route::post('/page/save/{id}','dashboard\PagesController@save');
 Route::get('/Email_Templates', 'dashboard\EmailTemplatesController@index');
 Route::get('/Email_Templates/edit/{id}', 'dashboard\EmailTemplatesController@edit');
 Route::get('/Email_Templates/create', 'dashboard\EmailTemplatesController@create');
-Route::post('/Email_Templates/create', 'dashboard\EmailTemplatesController@store');
 Route::get('/Email_Templates/delete/{id}', 'dashboard\EmailTemplatesController@delete');
 Route::post('/Email_Templates/save/{id}','dashboard\EmailTemplatesController@save');
  
@@ -55,6 +67,12 @@ Route::get('/Manage/edit/{id}', 'dashboard\ManageController@edit');
 Route::get('/Manage/create', 'dashboard\ManageController@create');
 Route::post('/Manage/delete', 'dashboard\ManageController@delete');
 Route::post('/Manage/save/{id}','dashboard\ManageController@save');
+
+Route::get('/News', 'dashboard\NewsController@index');
+Route::get('/News/edit/{id}', 'dashboard\NewsController@edit');
+Route::get('/News/create', 'dashboard\NewsController@create');
+Route::post('/News/delete', 'dashboard\NewsController@delete');
+Route::post('/News/save/{id}','dashboard\NewsController@save');
 
 
 Route::get('/FAQs', 'dashboard\FAQsController@index');
@@ -99,7 +117,7 @@ Route::post('/Manage_Users/changestatus/{id}','dashboard\ManageUsersController@c
 Route::get('/Transaction_History', 'dashboard\TransactionhistoryController@index');
 
 
-Route::get('/Categories', 'dashboard\CategoriesController@index');
+Route::get('/Categories', 'dashboard\CategoesController@index');
 Route::get('/Categories/edit/{id}', 'dashboard\CategoriesController@edit');
 Route::get('/Categories/create', 'dashboard\CategoriesController@create');
 Route::post('/Categories/delete', 'dashboard\CategoriesController@delete');
@@ -116,25 +134,9 @@ Route::post('/Sub_categories/delete', 'dashboard\SubcategoriesController@delete'
 Route::post('/Sub_categories/save/{id}','dashboard\SubcategoriesController@save');
 
 
-Route::get('/Addon_Packages', 'dashboard\AddonpackagesController@index');
+Route::get('/Addon_Packages', 'dashboard\AddController@index');
 Route::post('/Addon_Packages/save/{id}', 'dashboard\AddonpackagesController@save');
 Route::get('/Addon_Packages/edit/{id}', 'dashboard\AddonpackagesController@edit');
-
-
-
-Route::get('/Package_History', 'dashboard\PackageHistoryController@index');
-
-
-Route::get('/Credit_Packages', 'dashboard\CreditPackagesController@index');
-Route::get('/Credit_Packages/create', 'dashboard\CreditPackagesController@create');
-Route::post('/Credit_Packages/save/{id}', 'dashboard\CreditPackagesController@save');
-Route::get('/Credit_Packages/edit/{id}', 'dashboard\CreditPackagesController@edit');
-Route::post('/Credit_Packages/delete/', 'dashboard\CreditPackagesController@delete');
-
-
-Route::get('/Credit_History', 'dashboard\CreditHistoryController@index');
-
-
 Route::get('/Skill_Category', 'dashboard\SkillCategoryController@index');
 Route::get('/Skill_Category/create', 'dashboard\SkillCategoryController@create');
 Route::post('/Skill_Category/save/{id}', 'dashboard\SkillCategoryController@save');
@@ -149,12 +151,12 @@ Route::get('/Skill_sub_category/edit/{id}', 'dashboard\SkillsubcategoryControlle
 Route::post('/Skill_sub_category/delete', 'dashboard\SkillsubcategoryController@delete');
 
 Route::get('/Designer_Portfolios', 'dashboard\DesignerPortfoliosController@index');
-Route::get('/Admin_Portfolios', 'dashboard\AdminPortfoliosController@index');
+Route::get('/Admin_Portfolios', 'dashboard\AdminPoosController@index');
 Route::get('/Discover_Spaces', 'dashboard\DiscoverSpacesController@index');
 
 /*********   rcj ******************/
 Route::get('/AddPortfolio', 'dashboard\AdminPortfoliosController@create');
-Route::get('/AddPortfolio/{id}', 'dashboard\AdminPortfoliosController@detail');
+Route::get('/AddPortfolio/{id}', 'dashboard\AdminPortfsController@detail');
 Route::post('/AddPortfolio/add/{id}', 'dashboard\AdminPortfoliosController@add');
 Route::get('/Trending_Now', 'dashboard\TrendingNowController@index');
 Route::post('/Discover_Spaces', 'dashboard\DiscoverSpacesController@publish');
@@ -242,9 +244,9 @@ Route::get('/profile/membership','frontend\MembershipController@index')->name('f
 Route::get('/about', 'frontend\PagesController@aboutus');
 Route::get('/homeowners', 'frontend\PagesController@homeowners');
 Route::get('/professionals', 'frontend\PagesController@professionals');
-Route::get('/terms-of-service', 'frontend\PagesController@terms');
-Route::get('/privacy-policy', 'frontend\PagesController@privacy');
-Route::get('/acceptable-policy', 'frontend\PagesController@acceptable');
+Route::get('/terms_of_use', 'frontend\PagesController@terms');
+Route::get('/privacy_policy', 'frontend\PagesController@privacy');
+Route::get('/terms_and_condition', 'frontend\PagesController@acceptable');
 
 Route::post('/payment/paywithcreditcard','PaymentController@paywithcreditcard')->name('paypal.creditcard');
 Route::post('/payment/membership','PaymentController@membership')->name('membership.paypal');
@@ -259,13 +261,15 @@ Route::get('/callback', 'Auth\LoginController@handleProviderCallback');
 Route::get('/fbLogin', 'Auth\LoginController@fbLogin')->name('auth.facebook.login');
 Route::get('/fbcallback', 'Auth\LoginController@callback');
 
-Route::get('/admin/password/request', 'Auth\AdminLoginController@passwordrequest')->name('admin.password.request');
+Route::get('/admin/passwordLoginController@passwordrequest')->name('admin.password.request');
 Route::post('/admin/password/request', 'Auth\AdminLoginController@requestpassword')->name('admin.email.request');
 Route::get('/admin/password/reset/{token}','Auth\AdminLoginController@resetform')->name('activate.admin');
 Route::post('/admin/password/reset','Auth\AdminLoginController@resetpassword')->name('admin.email.reset');
 
 Route::get('/faq','frontend\FaqController@index')->name('front.faq');
-Route::get('/blog', 'frontend\BlogController@index');
+Route::get('/blog', 'frontend\BlogController@index')->name('blog');
+Route::get('/blogs/{tag}', 'frontend\BlogController@tag')->name('tag');
+Route::get('/blog/{slug}', 'frontend\BlogController@detail')->name('blog.detail');
 Route::get('/profile/{id}','frontend\HomeController@userprofile')->name('user.profile');
 
 
@@ -273,3 +277,9 @@ Route::get('/profile/{id}','frontend\HomeController@userprofile')->name('user.pr
 
 Route::get('/designerReg', 'frontend\designerSignupController@index');
 Route::post('/designerReg','frontend\designerSignupController@save');
+
+Route::get('/3Mcommand', 'frontend\contestcommandController@index');
+Route::post('/3Mcommand', 'frontend\contestcommandController@save');
+
+
+Route::get('/portfoliotest', 'frontend\DesignDisplayController@index');
