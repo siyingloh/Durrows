@@ -87,6 +87,8 @@ class TestController extends Controller
         "enjoy_manage" => $request->enjoy_manage,
         "enjoy_style" => $request->enjoy_style      
             ];
+        $user = User::find(Auth::user()->id);
+        $user->client_url = $request->client_url;
         
         // dd($user);
         if($request->skills)
@@ -104,7 +106,7 @@ class TestController extends Controller
          DB::table('user_profile') 
         ->where('cilent_email', Auth::user()->email)
         ->update($userProfile);
-        
+        $user->save();
         return redirect()->back()->with('message','Profile Settings Updated');
         
      
