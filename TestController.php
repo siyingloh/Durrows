@@ -77,18 +77,16 @@ class TestController extends Controller
     }
     public function profileSave(Request $request, $id){
 
-        $userProfile= DB::table('user_profile')
-    ->where('cilent_email',Auth::user()->email)
-    ->first();
-        $userProfile->cilent_email = $request->client_first_project;
-        $userProfile->client_country = $request->client_first_project;
-        $userProfile->client_accomplishments = $request->client_first_project;
-        $userProfile->client_first_project = $request->client_firstproj;
-        $userProfile->client_total_project = $request->client_totalproj;
-        $userProfile->enjoy_design = $request->enjoy_design;
-        $userProfile->enjoy_manage = $request->enjoy_manage;
-        $userProfile->enjoy_style = $request->enjoy_style;
-
+        $userProfile=[
+        "cilent_email" => $request->cilent_email,
+        "client_country" => $request->client_country,
+        "client_accomplishments" => $request->client_accomplishments,
+        "client_first_project" => $request->client_firstproj,
+        "client_total_project" => $request->client_totalproj,
+        "enjoy_design" => $request->enjoy_design,
+        "enjoy_manage" => $request->enjoy_manage,
+        "enjoy_style" => $request->enjoy_style      
+            ];
         
         // dd($user);
         if($request->skills)
@@ -96,17 +94,16 @@ class TestController extends Controller
             foreach ($request->skills as  $skill){
                 $skills.=$skill.';';
             }
-            $user->client_skills = "a:".count($request->skills).":{".$skills."}";
+            $userProfile->client_skills = "a:".count($request->skills).":{".$skills."}";
         }
         else{
-            $user->client_skills = '';
+            $userProfile->client_skills = '';
         }
-        // dd($request);
-        // dd($skills);
-        
-        // dd($user);
 
-        $userProfile->save();
+
+         DB::table('user_profile') 
+        ->where('cilent_email', Auth::user()->email)
+        ->update($userProfile);
         
         return redirect()->back()->with('message','Profile Settings Updated');
         
